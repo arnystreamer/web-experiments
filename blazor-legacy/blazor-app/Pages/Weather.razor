@@ -1,0 +1,63 @@
+﻿@page "/weather"
+@inject WeatherService Service
+
+@using BlazorAppTest.Models
+@using BlazorAppTest.Services
+@using Serilog
+@attribute [StreamRendering]
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (_weatherDataItems == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var forecast in _weatherDataItems)
+        {
+            <tr>
+                <td>@forecast.Id</td>
+                <td>@forecast.Date.ToShortDateString()</td>
+                <td>@forecast.TemperatureC</td>
+                <td>@forecast.TemperatureF</td>
+                <td>@forecast.Summary</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherDataItem[]? _weatherDataItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _weatherDataItems = await Service.GetAsync();
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error(ex, "Error in OnInitializedAsync");
+            _weatherDataItems = null;
+        }
+    }
+}
