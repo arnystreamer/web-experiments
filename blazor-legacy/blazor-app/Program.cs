@@ -32,6 +32,13 @@ var app = builder.Build();
 
 app.Services.GetRequiredService<WeatherService>().Initialize();
 
+var pathBase = builder.Configuration["PathBase"];
+Log.Logger.Information("Path base is {PathBase}", pathBase);
+if (!string.IsNullOrEmpty(pathBase))
+{
+    app.UsePathBase(pathBase);
+}
+
 app.UseStaticFiles();
 app.UseRouting();
 

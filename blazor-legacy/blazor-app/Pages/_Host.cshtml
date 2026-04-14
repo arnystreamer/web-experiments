@@ -1,6 +1,12 @@
 ﻿@page "/"
 @namespace BlazorAppTest.Pages
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    var pathBase = Configuration.GetValue(typeof(string), "PathBase") + "/";
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,7 +14,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <base href="~/" />
+    <base href="@pathBase" />
     <title>Test App</title>
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="app.css"/>
@@ -20,7 +26,7 @@
     <app>
         @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
     </app>
-    <script src="_framework/blazor.server.js"></script>
+    <script src="@(pathBase)_framework/blazor.server.js"></script>
 </body>
 
 </html>
